@@ -40,7 +40,7 @@ Options
                     'display': 'none',
                     'position': 'absolute',
                     'background-color': '#ccc',
-                    'z-index': '-100',
+                    'z-index': '2',
                     'height': height,
                 })
                 .addClass('gridlines')
@@ -54,7 +54,7 @@ Options
                     'display': 'none',
                     'position': 'absolute',
                     'background-color': '#ccc',
-                    'z-index': '-100',
+                    'z-index': '2',
                     'height': 1
                 })
                 .addClass('gridlines')
