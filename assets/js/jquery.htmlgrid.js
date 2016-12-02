@@ -1,67 +1,66 @@
 /*==========================================
-             HTML Alert Manager            
+             HTML Grid Manager            
 Options
-    - Header Text (string) :
-    - Footer Text (string) :
+    - themeName (string) :
+    - gridWidth (string) :
 ==========================================*/
 (function($) {
     'use strict';
-    $.fn.htmlAlert = function(options) {
+    $.fn.htmlGrid = function(options) {
         //true added to deep merge as we are using objects as options
         var defaults = {
-            headerCaption: "Header",
-            footerCaption: "Footer",
-            buttonText: "Close",
-            popupText: "Hello World!",
             themeName: "default",
-            overlayColor: "#CCCCCC",
-            popupAnimation: "",
+            gridSize: "50",
 
         };
+
         var opts = $.extend(true, {}, defaults, options);
         init();
         return this.each(function(index, element) {
-            $(element).bind("click.htmlalert", function() {
-                containerCenter(element);
-                $('#htmlalert').show();
-            });
+            createGrid(element);
         });
 
         function init() {
-            //create "htmlalert" div container and add to "body" tag
-            if ($('#htmlalert').length <= 0) {
-                var $htmlalert = $('<div />').appendTo('body').attr('id', 'htmlalert').addClass('modal').hide();
-                var $modal_content = $('<div />').appendTo($htmlalert).addClass('modal-content');
-                //Header Section
-                var $modal_header = $('<div />').appendTo($modal_content).addClass('modal-header-' + opts.themeName);
-                var $headerCaption = $('<h2 />').appendTo($modal_header).text(opts.headerCaption);
-                //Content Section
-                var $modal_body = $('<div />').appendTo($modal_content).addClass('modal-body-' + opts.themeName).html($.parseHTML(opts.popupText));
-                //Footer Section
-                var $modal_footer = $('<div />').appendTo($modal_content).addClass('modal-footer-' + opts.themeName);
-                var $footerCaption = $('<h4 />').appendTo($modal_footer).text(opts.footerCaption);
-                var $modal_footer_controls = $('<div />').appendTo($modal_footer).addClass('modal-footer-controls');
-                var $modal_footer_controls_open = $('<button />').appendTo($modal_footer_controls).addClass('btn btn-default').text(opts.buttonText).attr('id', "modal_footer_button");
 
-                $(".modal-content #modal_footer_button").click(function() {
-                    $('#htmlalert').hide();
-                    $('body').removeClass('overlay');
-                });
-
-
-            }
         }
 
+        function createGrid(element) {
+            var size = opts.gridSize;
+            var i,
+                height = $(element).outerHeight(),
+                width = $(element).outerWidth(),
+                ratioW = Math.floor(width / size),
+                ratioH = Math.floor(height / size),
+                elemoffset = $(element).offset();
+            for (i = 0; i <= ratioW; i++) // vertical grid lines
+                $('<div />').css({
+                    'top': elemoffset.top,
+                    'left': (elemoffset.left) + (i * size),
+                    'width': 1,
+                    'display': 'none',
+                    'position': 'absolute',
+                    'background-color': '#ccc',
+                    'z-index': '-100',
+                    'height': height,
+                })
+                .addClass('gridlines')
+                .appendTo($(element));
 
-        /**
-         * This function calculates and adjusts the screen position to center
-         */
+            for (i = 0; i <= ratioH; i++) // horizontal grid lines
+                $('<div />').css({
+                    'top': (elemoffset.top) + (i * size),
+                    'left': elemoffset.left,
+                    'width': width,
+                    'display': 'none',
+                    'position': 'absolute',
+                    'background-color': '#ccc',
+                    'z-index': '-100',
+                    'height': 1
+                })
+                .addClass('gridlines')
+                .appendTo($(element));
 
-        function containerCenter(element) {
-            $('#htmlalert').css("position", "absolute");
-            $('body').addClass('overlay').css("background-color", opts.overlayColor);
-            $('#htmlalert').css("top", ($(window).height() / 2) - ($('#htmlalert').outerHeight() / 2));
-            $('#htmlalert').css("left", ($(window).width() / 2) - ($('#htmlalert').outerWidth() / 2));
+            $('.gridlines').show();
         }
     };
 }(jQuery));
